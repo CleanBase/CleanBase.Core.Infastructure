@@ -4,15 +4,24 @@
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <PackageId>CleanBase.Core.Infrastructure</PackageId>
+	<Authors>HoangVH238</Authors>
+	<Product>CleanBase.Core.Infrastructure</Product>
+	<PackageLicenseFile>LICENSE</PackageLicenseFile>
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="AWSSDK.S3" Version="4.0.0-preview" />
+    <PackageReference Include="Azure.Core" Version="1.42.0" />
+    <PackageReference Include="Azure.Storage.Blobs" Version="12.22.0-beta.1" />
     <PackageReference Include="CleanBase.Core" Version="1.0.7.3" />
     <PackageReference Include="EFCore.BulkExtensions" Version="8.1.0" />
     <PackageReference Include="Hangfire" Version="1.8.14" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.0-preview.7.24405.3" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="9.0.0-preview.7.24405.3" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="9.0.0-preview.7.24405.7" />
+    <PackageReference Include="RestSharp" Version="111.4.1" />
+	<None Include="../LICENSE" Pack="true" PackagePath="" />
   </ItemGroup>
 
 </Project>
