@@ -11,24 +11,24 @@ using System.Threading.Tasks;
 
 namespace CleanBase.Core.Infrastructure.Services
 {
-	public static class ServiceBoostrapper
-	{
-		public static IServiceCollection UseMemoryCaching(this IServiceCollection services)
-		{
-			services.AddSingleton<ICacheManagerProvider, MemoryCacheManagerProvider>();
-			return services;
-		}
+    public static class ServiceBoostrapper
+    {
+        public static IServiceCollection UseMemoryCaching(this IServiceCollection services)
+        {
+            services.AddSingleton<ICacheManagerProvider, MemoryCacheManagerProvider>();
+            return services;
+        }
 
-		public static IServiceCollection UseHttpIdentityProvider(this IServiceCollection services)
-		{
-			services.AddScoped<IIdentityProvider, HttpIdentityProvider>();
-			return services;
-		}
+        public static IServiceCollection UseHttpIdentityProvider(this IServiceCollection services)
+        {
+            services.AddScoped<IIdentityProvider, HttpIdentityProvider>();
+            return services;
+        }
 
-		public static IServiceCollection UseKeyVaultService(this IServiceCollection services)
-		{
-			services.AddTransient<IKeyVaultService, KeyVaultService>();
-			return services;
-		}
-	}
+        public static IServiceCollection UseKeyVaultService(this IServiceCollection services)
+        {
+            services.AddTransient<IKeyVaultService, KeyVaultService>();
+            return services;
+        }
+    }
 }

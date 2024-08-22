@@ -7,11 +7,11 @@ using System.Threading.Tasks;
 
 namespace CleanBase.Core.Infrastructure.Extensions
 {
-	public static class ServicesExtension
-	{
-		public static IServiceCollection RegisterDefaultInfrastructure(this IServiceCollection services)
-		{
-			return services;
-		}
-	}
+    public static class ServicesExtension
+    {
+        public static IServiceCollection RegisterDefaultInfrastructure(this IServiceCollection services)
+        {
+            return services;
+        }
+    }
 }

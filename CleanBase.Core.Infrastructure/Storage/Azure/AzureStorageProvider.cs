@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace CleanBase.Core.Infrastructure.Storage.Azure
 {
- public class AzureStorageProvider : IStorageProvider
+    public class AzureStorageProvider : IStorageProvider
     {
         private readonly BlobServiceClient _blobServiceClient;
 
@@ -134,60 +134,60 @@ namespace CleanBase.Core.Infrastructure.Storage.Azure
             return string.Empty;
         }
 
-		public async Task<IDictionary<string, string>> GetMetadataAsync(string blobContainerName, string blobName)
-		{
-			var containerClient = _blobServiceClient.GetBlobContainerClient(blobContainerName);
-			var blobClient = containerClient.GetBlobClient(GetRelatePath(blobName));
+        public async Task<IDictionary<string, string>> GetMetadataAsync(string blobContainerName, string blobName)
+        {
+            var containerClient = _blobServiceClient.GetBlobContainerClient(blobContainerName);
+            var blobClient = containerClient.GetBlobClient(GetRelatePath(blobName));
 
-			try
-			{
-				var properties = await blobClient.GetPropertiesAsync();
-				return properties.Value.Metadata;
-			}
-			catch (RequestFailedException ex)
-			{
-				// Handle exception (log, rethrow, etc.)
-				throw new Exception("Failed to get metadata", ex);
-			}
-		}
+            try
+            {
+                var properties = await blobClient.GetPropertiesAsync();
+                return properties.Value.Metadata;
+            }
+            catch (RequestFailedException ex)
+            {
+                // Handle exception (log, rethrow, etc.)
+                throw new Exception("Failed to get metadata", ex);
+            }
+        }
 
-		public async Task SetMetadataAsync(string blobContainerName, string blobName, IDictionary<string, string> metadata)
-		{
-			var containerClient = _blobServiceClient.GetBlobContainerClient(blobContainerName);
-			var blobClient = containerClient.GetBlobClient(GetRelatePath(blobName));
+        public async Task SetMetadataAsync(string blobContainerName, string blobName, IDictionary<string, string> metadata)
+        {
+            var containerClient = _blobServiceClient.GetBlobContainerClient(blobContainerName);
+            var blobClient = containerClient.GetBlobClient(GetRelatePath(blobName));
 
-			try
-			{
-				await blobClient.SetMetadataAsync(metadata);
-			}
-			catch (RequestFailedException ex)
-			{
-				// Handle exception (log, rethrow, etc.)
-				throw new Exception("Failed to set metadata", ex);
-			}
-		}
+            try
+            {
+                await blobClient.SetMetadataAsync(metadata);
+            }
+            catch (RequestFailedException ex)
+            {
+                // Handle exception (log, rethrow, etc.)
+                throw new Exception("Failed to set metadata", ex);
+            }
+        }
 
-		public async Task<IEnumerable<string>> ListFilesAsync(string blobContainerName)
-		{
-			var containerClient = _blobServiceClient.GetBlobContainerClient(blobContainerName);
+        public async Task<IEnumerable<string>> ListFilesAsync(string blobContainerName)
+        {
+            var containerClient = _blobServiceClient.GetBlobContainerClient(blobContainerName);
 
-			try
-			{
-				var blobItems = containerClient.GetBlobsAsync();
-				var blobNames = new List<string>();
+            try
+            {
+                var blobItems = containerClient.GetBlobsAsync();
+                var blobNames = new List<string>();
 
-				await foreach (var blobItem in blobItems)
-				{
-					blobNames.Add(blobItem.Name);
-				}
+                await foreach (var blobItem in blobItems)
+                {
+                    blobNames.Add(blobItem.Name);
+                }
 
-				return blobNames;
-			}
-			catch (RequestFailedException ex)
-			{
-				// Handle exception (log, rethrow, etc.)
-				throw new Exception("Failed to list files", ex);
-			}
-		}
-	}
+                return blobNames;
+            }
+            catch (RequestFailedException ex)
+            {
+                // Handle exception (log, rethrow, etc.)
+                throw new Exception("Failed to list files", ex);
+            }
+        }
+    }
 }

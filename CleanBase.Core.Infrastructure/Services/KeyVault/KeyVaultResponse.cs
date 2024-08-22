@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace CleanBase.Core.Infrastructure.Services.KeyVault
 {
-	public class KeyVaultResponse
-	{
-		public string AppId { get; set; }
-		public AppSettings config { get; set; }
-	}
+    public class KeyVaultResponse
+    {
+        public string AppId { get; set; }
+        public AppSettings config { get; set; }
+    }
 }

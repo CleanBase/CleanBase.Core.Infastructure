@@ -42,13 +42,13 @@ namespace CleanBase.Core.Infrastructure.Jobs.Hangfire
             RecurringJob.AddOrUpdate(jobCode, function, cron, options);
         }
 
-		public void Recurring(
-            string jobCode, 
-            Expression<Func<Task>> function, 
-            string cron, 
-            TimeZoneInfo timeZone = null, 
+        public void Recurring(
+            string jobCode,
+            Expression<Func<Task>> function,
+            string cron,
+            TimeZoneInfo timeZone = null,
             string queue = "default")
-		{
+        {
             var options = new RecurringJobOptions
             {
                 TimeZone = timeZone ?? TimeZoneInfo.Local,
@@ -56,8 +56,8 @@ namespace CleanBase.Core.Infrastructure.Jobs.Hangfire
             };
 
             RecurringJob.AddOrUpdate(jobCode, function, cron, options);
-		}
-		public void Recurring(
+        }
+        public void Recurring(
             string jobCode,
             Expression<Action> function,
             string cron,
@@ -155,7 +155,7 @@ namespace CleanBase.Core.Infrastructure.Jobs.Hangfire
         {
             // Remove the existing job
             BackgroundJob.Delete(jobCode);
-            
+
             // Re-schedule the job with new delay
             // Assuming you have a way to re-create the job with its original details
             // Example: you might need to store job details somewhere to re-add it
@@ -163,5 +163,5 @@ namespace CleanBase.Core.Infrastructure.Jobs.Hangfire
             // In practice, you need to handle job details appropriately.
             throw new NotSupportedException("Updating a job schedule is not supported directly.");
         }
-	}
+    }
 }

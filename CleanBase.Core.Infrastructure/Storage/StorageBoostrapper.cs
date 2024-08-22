@@ -11,13 +11,13 @@ using System.Threading.Tasks;
 
 namespace CleanBase.Core.Infrastructure.Storage
 {
-	public static class StorageBoostrapper
-	{
-		public static IServiceCollection UseAzureStorage(this IServiceCollection services, AppSettings appSettings)
-		{
-			services.AddSingleton<BlobServiceClient>(new BlobServiceClient(appSettings.AzureStorageSetting.BlobConnectionString));
-			services.AddScoped<IStorageProvider, AzureStorageProvider>();
-			return services;
-		}
-	}
+    public static class StorageBoostrapper
+    {
+        public static IServiceCollection UseAzureStorage(this IServiceCollection services, AppSettings appSettings)
+        {
+            services.AddSingleton<BlobServiceClient>(new BlobServiceClient(appSettings.AzureStorageSetting.BlobConnectionString));
+            services.AddScoped<IStorageProvider, AzureStorageProvider>();
+            return services;
+        }
+    }
 }

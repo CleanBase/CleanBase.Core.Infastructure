@@ -14,82 +14,82 @@ using System.Threading.Tasks;
 
 namespace CleanBase.Core.Infrastructure.EF.UnitOfWork
 {
-	public class EFUnitOfWork : CleanBase.Core.Data.UnitOfWorks.UnitOfWork
-	{
-		private bool _disposed;
-		private readonly DbContext _context;
-		private readonly Dictionary<Type, IRepository> _repository = new();
-		protected readonly Dictionary<Type, Type> RepositoriesMapping = new();
-		private readonly ICoreProvider _coreProvider;
-		private ICustomTransaction _transaction;
+    public class EFUnitOfWork : CleanBase.Core.Data.UnitOfWorks.UnitOfWork
+    {
+        private bool _disposed;
+        private readonly DbContext _context;
+        private readonly Dictionary<Type, IRepository> _repository = new();
+        protected readonly Dictionary<Type, Type> RepositoriesMapping = new();
+        private readonly ICoreProvider _coreProvider;
+        private ICustomTransaction _transaction;
 
-		public EFUnitOfWork(ICoreProvider coreProvider, DbContext context)
-		{
-			_context = context ?? throw new ArgumentNullException(nameof(context));
-			_coreProvider = coreProvider ?? throw new ArgumentNullException(nameof(coreProvider));
-			InitRepositoriesMapping();
-		}
+        public EFUnitOfWork(ICoreProvider coreProvider, DbContext context)
+        {
+            _context = context ?? throw new ArgumentNullException(nameof(context));
+            _coreProvider = coreProvider ?? throw new ArgumentNullException(nameof(coreProvider));
+            InitRepositoriesMapping();
+        }
 
-		protected virtual void InitRepositoriesMapping() { }
+        protected virtual void InitRepositoriesMapping() { }
 
-		protected virtual Type? GetRepositoryTypeByEntityType<T>()
-		{
-			RepositoriesMapping.TryGetValue(typeof(T), out var repoType);
-			return repoType;
-		}
+        protected virtual Type? GetRepositoryTypeByEntityType<T>()
+        {
+            RepositoriesMapping.TryGetValue(typeof(T), out var repoType);
+            return repoType;
+        }
 
-		public void AddRepository(IRepository repository)
-		{
-			if (repository == null) throw new ArgumentNullException(nameof(repository));
-			if (!_repository.ContainsKey(repository.EntityType))
-				_repository.Add(repository.EntityType, repository);
-		}
+        public void AddRepository(IRepository repository)
+        {
+            if (repository == null) throw new ArgumentNullException(nameof(repository));
+            if (!_repository.ContainsKey(repository.EntityType))
+                _repository.Add(repository.EntityType, repository);
+        }
 
-		public DbContext GetContext() => _context;
+        public DbContext GetContext() => _context;
 
-		public override ICustomTransaction BeginTransaction()
-		{
-			if (_transaction != null)
-				return new EmptyTransaction();
+        public override ICustomTransaction BeginTransaction()
+        {
+            if (_transaction != null)
+                return new EmptyTransaction();
 
-			_transaction = new EFTransaction(_context.Database.BeginTransaction());
-			return _transaction;
-		}
+            _transaction = new EFTransaction(_context.Database.BeginTransaction());
+            return _transaction;
+        }
 
-		public override void SaveChanges() => _context.SaveChanges();
+        public override void SaveChanges() => _context.SaveChanges();
 
-		public override async Task SaveChangesAsync()
-		{
-			await _context.SaveChangesAsync();
-		}
+        public override async Task SaveChangesAsync()
+        {
+            await _context.SaveChangesAsync();
+        }
 
-		public override IRepository<T> GetRepositoryByEntityType<T>()
-		{
-			var repoType = GetRepositoryTypeByEntityType<T>();
-			if (repoType != null)
-				return (IRepository<T>)_coreProvider.ServiceProvider.GetService(repoType);
+        public override IRepository<T> GetRepositoryByEntityType<T>()
+        {
+            var repoType = GetRepositoryTypeByEntityType<T>();
+            if (repoType != null)
+                return (IRepository<T>)_coreProvider.ServiceProvider.GetService(repoType);
 
-			if (!_repository.TryGetValue(typeof(T), out var repository))
-				_repository[typeof(T)] = repository = new EFRepository<T>(_coreProvider, _context);
+            if (!_repository.TryGetValue(typeof(T), out var repository))
+                _repository[typeof(T)] = repository = new EFRepository<T>(_coreProvider, _context);
 
-			return (IRepository<T>)repository;
-		}
+            return (IRepository<T>)repository;
+        }
 
-		public override TRepo Repository<TRepo>()
-		{
-			return _coreProvider.ServiceProvider.GetRequiredService<TRepo>();
-		}
+        public override TRepo Repository<TRepo>()
+        {
+            return _coreProvider.ServiceProvider.GetRequiredService<TRepo>();
+        }
 
-		protected override void Dispose(bool disposing)
-		{
-			if (_disposed) return;
+        protected override void Dispose(bool disposing)
+        {
+            if (_disposed) return;
 
-			if (disposing)
-			{
-				_context.Dispose();
-			}
+            if (disposing)
+            {
+                _context.Dispose();
+            }
 
-			_disposed = true;
-		}
-	}
+            _disposed = true;
+        }
+    }
 }

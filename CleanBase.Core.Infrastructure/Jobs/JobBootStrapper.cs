@@ -10,13 +10,13 @@ using System.Threading.Tasks;
 
 namespace CleanBase.Core.Infrastructure.Jobs
 {
-	public static class JobBootStrapper
-	{
-		public static IServiceCollection UseHangfireBackgroundJob(this IServiceCollection services)
-		{
-			services.AddHostedService<HostedService>();
-			services.AddSingleton<IBackgroundJob, HangfireBackgroundJob>();
-			return services;
-		}
-	}
+    public static class JobBootStrapper
+    {
+        public static IServiceCollection UseHangfireBackgroundJob(this IServiceCollection services)
+        {
+            services.AddHostedService<HostedService>();
+            services.AddSingleton<IBackgroundJob, HangfireBackgroundJob>();
+            return services;
+        }
+    }
 }
