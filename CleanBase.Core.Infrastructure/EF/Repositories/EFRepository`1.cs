@@ -31,19 +31,12 @@ namespace CleanBase.Core.Infrastructure.EF.Repositories
             this.AddCorePolicies();
         }
 
-        protected virtual void AddCorePolicies()
-        {
-            if (!this.Policies.Any())
-            {
-                var corePolicies = this.CoreProvider.PolicyFactory.CreateCorePolicy(this.EntityType, this.CoreProvider);
-                if (corePolicies != null && corePolicies.Any())
-                {
-                    this.AddPolicies(corePolicies.ToArray<IDataPolicy>());
-                }
-            }
-        }
+		protected virtual void AddCorePolicies()
+		{
+			this.AddPolicies(this.CoreProvider.PolicyFactory.CreateCorePolicy(this.EntityType, this.CoreProvider).ToArray<IDataPolicy>());
+		}
 
-        public override T Add(T entity, bool saveChanges = false)
+		public override T Add(T entity, bool saveChanges = false)
         {
             entity.NormalizeData();
             this.ApplyAddPolicy(entity, true);
