@@ -414,7 +414,7 @@ namespace CleanBase.Core.Infrastructure.EF.Repositories
             }
             return await Task.FromResult(true);
         }
-        public override async Task<bool> DeleteAsync(params object[] keys) => await this.DeleteAsync(this.FindAsync(keys), false);
+        public override async Task<bool> DeleteAsync(params object[] keys) => await this.DeleteAsync(await this.FindAsync(keys), false);
 
         public override async Task<bool> HardDeleteAsync(params object[] keys) => await this.HardDeleteAsync(this.Find(keys), false);
 
