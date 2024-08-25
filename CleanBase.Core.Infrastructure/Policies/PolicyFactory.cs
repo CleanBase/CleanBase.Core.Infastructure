@@ -11,45 +11,67 @@ namespace CleanBase.Core.Infrastructure.Policies
 {
 	public class PolicyFactory : IPolicyFactory
 	{
-		protected virtual IEnumerable<IDataPolicy> CreateCorePolicyInternal(
-		  Type entityType,
-		  ICoreProvider coreProvider)
+		public IEnumerable<IDataPolicy> CreateCorePolicy(Type entityType, ICoreProvider coreProvider)
 		{
+			var dataPolicyList = new List<IDataPolicy>();
+			dataPolicyList.AddRange(CreateCorePolicyInternal(entityType, coreProvider));
+			dataPolicyList.AddRange(CreateChildCorePolicyInternal(entityType, coreProvider));
+			return dataPolicyList;
+		}
+
+		protected virtual IEnumerable<IDataPolicy> CreateCorePolicyInternal(Type entityType, ICoreProvider coreProvider)
+		{
+			var policies = new List<IDataPolicy>();
+
 			if (typeof(IActive).IsAssignableFrom(entityType))
-				yield return Activator.CreateInstance(typeof(ActiveRequiredPolicy<>).MakeGenericType(entityType)) as IDataPolicy;
+			{
+				policies.Add(CreatePolicy(typeof(ActiveRequiredPolicy<>), entityType));
+			}
 			if (typeof(IEntityAudit).IsAssignableFrom(entityType))
-				yield return Activator.CreateInstance(typeof(AuditRequiredPolicy<>).MakeGenericType(entityType), (object)coreProvider) as IDataPolicy;
+			{
+				policies.Add(CreatePolicy(typeof(AuditRequiredPolicy<>), entityType, coreProvider));
+			}
 			if (typeof(IEntityName).IsAssignableFrom(entityType))
-				yield return Activator.CreateInstance(typeof(NameOrderByPolicy<>).MakeGenericType(entityType)) as IDataPolicy;
+			{
+				policies.Add(CreatePolicy(typeof(NameOrderByPolicy<>), entityType));
+			}
 			if (typeof(IOwnerEntity).IsAssignableFrom(entityType))
-				yield return Activator.CreateInstance(typeof(OwnerFilterPolicy<>).MakeGenericType(entityType), (object)coreProvider) as IDataPolicy;
+			{
+				policies.Add(CreatePolicy(typeof(OwnerFilterPolicy<>), entityType, coreProvider));
+			}
 			if (typeof(IOwnerOrSystemEntity).IsAssignableFrom(entityType))
-				yield return Activator.CreateInstance(typeof(OwnerOrSystemFilterPolicy<>).MakeGenericType(entityType), (object)coreProvider) as IDataPolicy;
+			{
+				policies.Add(CreatePolicy(typeof(OwnerOrSystemFilterPolicy<>), entityType, coreProvider));
+			}
 			if (typeof(ITenanEntity).IsAssignableFrom(entityType))
 			{
-				yield return Activator.CreateInstance(typeof(TenantFilterPolicy<>).MakeGenericType(entityType), (object)coreProvider) as IDataPolicy;
-				yield return Activator.CreateInstance(typeof(TenantEntityCreatingPolicy<>).MakeGenericType(entityType), (object)coreProvider) as IDataPolicy;
+				policies.Add(CreatePolicy(typeof(TenantFilterPolicy<>), entityType, coreProvider));
+				policies.Add(CreatePolicy(typeof(TenantEntityCreatingPolicy<>), entityType, coreProvider));
 			}
 			if (typeof(IAppEntity).IsAssignableFrom(entityType))
 			{
-				yield return Activator.CreateInstance(typeof(AppFilterPolicy<>).MakeGenericType(entityType), (object)coreProvider) as IDataPolicy;
-				yield return Activator.CreateInstance(typeof(AppEntityCreatingPolicy<>).MakeGenericType(entityType), (object)coreProvider) as IDataPolicy;
+				policies.Add(CreatePolicy(typeof(AppFilterPolicy<>), entityType, coreProvider));
+				policies.Add(CreatePolicy(typeof(AppEntityCreatingPolicy<>), entityType, coreProvider));
 			}
+
+			return policies;
 		}
 
-		protected virtual IEnumerable<IDataPolicy> CreateChildCorePolicyInternal(
-		  Type entityType,
-		  ICoreProvider coreProvider)
+		private IDataPolicy CreatePolicy(Type policyBaseType, Type entityType, ICoreProvider? coreProvider = null)
+		{
+			var policyType = policyBaseType.MakeGenericType(entityType);
+			if (coreProvider == null)
+			{
+				return (IDataPolicy)Activator.CreateInstance(policyType)
+					?? throw new InvalidOperationException($"Unable to create policy of type {policyType}");
+			}
+			return (IDataPolicy)Activator.CreateInstance(policyType, coreProvider)
+				?? throw new InvalidOperationException($"Unable to create policy of type {policyType} with coreProvider");
+		}
+
+		protected virtual IEnumerable<IDataPolicy> CreateChildCorePolicyInternal(Type entityType, ICoreProvider coreProvider)
 		{
 			return Enumerable.Empty<IDataPolicy>();
-		}
-
-		public IEnumerable<IDataPolicy> CreateCorePolicy(Type entityType, ICoreProvider coreProvider)
-		{
-			List<IDataPolicy> dataPolicyList = new List<IDataPolicy>();
-			dataPolicyList.AddRange(this.CreateCorePolicyInternal(entityType, coreProvider));
-			dataPolicyList.AddRange(this.CreateChildCorePolicyInternal(entityType, coreProvider));
-			return (IEnumerable<IDataPolicy>)dataPolicyList;
 		}
 	}
 }
