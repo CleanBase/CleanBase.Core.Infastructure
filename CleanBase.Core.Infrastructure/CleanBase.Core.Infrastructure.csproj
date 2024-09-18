@@ -17,10 +17,11 @@
     <PackageReference Include="CleanBase.Core" Version="1.0.7.3" />
     <PackageReference Include="EFCore.BulkExtensions" Version="8.1.0" />
     <PackageReference Include="Hangfire" Version="1.8.14" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.8" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.8" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="8.0.8" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.0" />
-    <PackageReference Include="RestSharp" Version="111.4.1" />
+    <PackageReference Include="RestSharp" Version="112.0.0" />
 	<None Include="../LICENSE" Pack="true" PackagePath="" />
   </ItemGroup>
 
