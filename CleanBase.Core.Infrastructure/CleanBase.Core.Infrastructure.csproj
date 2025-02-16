@@ -14,7 +14,7 @@
     <PackageReference Include="AWSSDK.S3" Version="4.0.0-preview" />
     <PackageReference Include="Azure.Core" Version="1.42.0" />
     <PackageReference Include="Azure.Storage.Blobs" Version="12.22.0-beta.1" />
-    <PackageReference Include="CleanBase.Core" Version="1.0.7.3" />
+    <PackageReference Include="CleanBase.Core" Version="1.2.2" />
     <PackageReference Include="EFCore.BulkExtensions" Version="8.1.0" />
     <PackageReference Include="Hangfire" Version="1.8.14" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.8" />
